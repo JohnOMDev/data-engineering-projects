@@ -1,8 +1,7 @@
 import os
 import glob
 import psycopg2
-import datatime
-
+from datetime import datetime
 import pandas as pd
 
 # from sql_queries import *  # Bad code using wildcard
@@ -36,20 +35,33 @@ def process_log_file(cur, filepath):
 
     # filter by NextSong action
     df = df[df["page"] == "NextSong"]
-
     # convert timestamp column to datetime
-    t = datatime.datatime(df["ts"])
-    
+    t = df['ts'].apply(lambda x: datetime.utcfromtimestamp(x//1000.0))
     # insert time data records
-    time_data = 
-    column_labels = 
-    time_df = 
+    df['start_time'] = t
+    df['hour'] = t.apply(lambda x: x.hour)
+    df['day'] = t.apply(lambda x: x.day)
+    df['week'] = t.apply(lambda x: x.week)
+    df['month'] = t.apply(lambda x: x.month)
+    df['year'] = t.apply(lambda x: x.year)
+    df['weekday'] = t.apply(lambda x: x.day_name())
+    column_labels = ["start_time", "hour",
+                     "day", "week", "month", "year", "weekday"]
+    time_df = df[column_labels]
 
     for i, row in time_df.iterrows():
+        print(list(row))
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df = 
+    user_cols = ["userId", "firstName",
+                 "lastName", "gender", "level"]
+    user_df = df[user_cols].rename(columns=({
+        "userId": "user_id",
+        "firstName": "first_name",
+        "lastName": "last_name"
+        }))
+    user_df["user_id"] = user_df["user_id"].astype(int)
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -57,11 +69,11 @@ def process_log_file(cur, filepath):
 
     # insert songplay records
     for index, row in df.iterrows():
-        
+
         # get songid and artistid from song and artist tables
         cur.execute(song_select, (row.song, row.artist, row.length))
         results = cur.fetchone()
-        
+
         if results:
             songid, artistid = results
         else:

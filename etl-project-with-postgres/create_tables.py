@@ -2,6 +2,16 @@ import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
 
 
+# =============================================================================
+# cur.execute("REVOKE CONNECT ON DATABASE sparkifydb FROM public;")
+# cur.execute("SELECT pg_terminate_backend(pg_stat_activity.pid)
+# FROM pg_stat_activity
+# WHERE pg_stat_activity.datname = 'sparkifydb';")
+# cur.execute("SELECT pg_terminate_backend(pg_stat_activity.pid) \
+# FROM pg_stat_activity WHERE pg_stat_activity.datname = 'sparkifydb';")
+# cur.execute("DROP DATABASE IF EXISTS sparkifydb")
+# =============================================================================
+
 def create_database():
     """
     - Creates and connects to the sparkifydb

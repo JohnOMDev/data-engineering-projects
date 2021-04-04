@@ -2,18 +2,14 @@ import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
 
 
-# =============================================================================
-# cur.execute("REVOKE CONNECT ON DATABASE sparkifydb FROM public;")
-# cur.execute("SELECT pg_terminate_backend(pg_stat_activity.pid)
-# FROM pg_stat_activity
-# WHERE pg_stat_activity.datname = 'sparkifydb';")
-# cur.execute("SELECT pg_terminate_backend(pg_stat_activity.pid) \
-# FROM pg_stat_activity WHERE pg_stat_activity.datname = 'sparkifydb';")
-# cur.execute("DROP DATABASE IF EXISTS sparkifydb")
-# =============================================================================
-
 def create_database():
     """
+
+    Returns
+    -------
+    cur : TYPE
+        DESCRIPTION.
+    conn : TYPE
     - Creates and connects to the sparkifydb
     - Returns the connection and cursor to sparkifydb
     """
@@ -39,6 +35,16 @@ def create_database():
 
 def drop_tables(cur, conn):
     """
+
+    Parameters
+    ----------
+    cur : TYPE
+        DESCRIPTION.
+    conn : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
     Drops each table using the queries in `drop_table_queries` list.
     """
     for query in drop_table_queries:
@@ -49,6 +55,16 @@ def drop_tables(cur, conn):
 
 def create_tables(cur, conn):
     """
+
+    Parameters
+    ----------
+    cur : TYPE
+        DESCRIPTION.
+    conn : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
     Creates each table using the queries in `create_table_queries` list.
     """
     for query in create_table_queries:
@@ -59,6 +75,9 @@ def create_tables(cur, conn):
 
 def main():
     """
+
+    Returns
+    -------
     - Drops (if exists) and Creates the sparkify database.
 
     - Establishes connection with the sparkify database and gets

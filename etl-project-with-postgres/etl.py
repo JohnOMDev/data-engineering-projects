@@ -30,14 +30,12 @@ def process_song_file(cur, filepath):
 
     # insert song record
     # song_cols = ["song_id", "title", "artist_id", "year", "duration"]
-    song_data = list(df[["song_id", "title", "artist_id", "year", "duration"]].values)
-    for data in song_data:
-        cur.execute(song_table_insert, song_data)
+    song_data = list(df[["song_id", "title", "artist_id", "year", "duration"]].values[0])
+    cur.execute(song_table_insert, song_data)
 
     artist_data = list(df[["artist_id", "artist_name", "artist_location",
                            "artist_latitude", "artist_longitude"]].values[0])
-    for data in artist_data:
-        cur.execute(artist_table_insert, artist_data)
+    cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):

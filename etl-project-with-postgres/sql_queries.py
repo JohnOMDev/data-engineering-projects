@@ -19,11 +19,11 @@ user_table_create = (""" CREATE TABLE IF NOT EXISTS users (user_id int, first_na
 """)
 
 song_table_create = (""" CREATE TABLE IF NOT EXISTS songs (song_id varchar, title varchar, \
-                         artist_id varchar, year int, duration decimal(10,2))
+                         artist_id varchar, year int, duration decimal(20,10))
 """)
 
 artist_table_create = (""" CREATE TABLE IF NOT EXISTS artists (artist_id varchar, name varchar, \
-                           location varchar, latitude decimal(10,2), longitude decimal(10,2))
+                           location varchar, latitude decimal(10,2), longitude decimal(20,10))
 """)
 
 time_table_create = (""" CREATE TABLE IF NOT EXISTS time (start_time timestamp, hour int, \

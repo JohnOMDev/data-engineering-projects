@@ -60,7 +60,8 @@ time_table_insert = (""" INSERT INTO time (start_time, hour, \
 
 # FIND SONGS
 
-song_select = (""" SELECT * FROM songs
+song_select = (""" SELECT artist.artist_id, artist.artist_id  FROM (songs JOIN artist ON \
+                       artist.artist_id=song.artist_id)
 """)
 
 # QUERY LISTS

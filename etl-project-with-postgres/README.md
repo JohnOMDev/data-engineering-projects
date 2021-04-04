@@ -16,4 +16,10 @@ For example, here are filepaths to two files in this dataset.
 ### 3   Create table if not exists
 ### 4   Insert into table
 ### 5   Build ETL Processes
-### 6   Query and test   
+### 6   Query and test
+
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/etl-project-with-postgres/blob/main/song_table.png?raw=true)
+
+
+
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/etl-project-with-postgres/blob/main/fact_table.png?raw=true)

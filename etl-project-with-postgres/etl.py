@@ -10,26 +10,54 @@ from sql_queries import songplay_table_insert, user_table_insert, song_table_ins
 
 
 def process_song_file(cur, filepath):
+    """
+
+    Parameters
+    ----------
+    cur : TYPE
+        DESCRIPTION.
+    filepath : TYPE
+
+    Returns
+    -------
+    - Load the data file
+    - Process and insert song data
+    - Process and insert artist data
+
+    """
     # open song file
     df = pd.read_json(filepath, lines=True)
 
     # insert song record
-    song_cols = ["song_id", "title", "artist_id", "year", "duration"]
-    song_data = df[song_cols]
-    cur.execute(song_table_insert, song_data)
+    # song_cols = ["song_id", "title", "artist_id", "year", "duration"]
+    song_data = list(df[["song_id", "title", "artist_id", "year", "duration"]].values)
+    for data in song_data:
+        cur.execute(song_table_insert, song_data)
 
-    # insert artist record
-    artist_col = ["artist_id", "artist_name", "artist_location",
-                  "artist_latitude", "artist_longitude"]
-    artist_data = df[artist_col].rename(columns={"artist_name": "name",
-                                                 "artist_location": "location",
-                                                 "artist_latitude": "latitude",
-                                                 "artist_longitude": "longitude"
-                                                 })
-    cur.execute(artist_table_insert, artist_data)
+    artist_data = list(df[["artist_id", "artist_name", "artist_location",
+                           "artist_latitude", "artist_longitude"]].values[0])
+    for data in artist_data:
+        cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
+    """
+
+    Parameters
+    ----------
+    cur : TYPE
+        DESCRIPTION.
+    filepath : TYPE
+
+    Returns
+    -------
+    - Load the data file
+    - Process and insert user data
+    - Process and insert time data
+    - Extract artist_id and song_id from artist and song table
+    - Process and insert the fact table "songsplay"
+
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -67,11 +95,13 @@ def process_log_file(cur, filepath):
     for i, row in user_df.iterrows():
         cur.execute(user_table_insert, row)
 
-    # insert songplay records
     for index, row in df.iterrows():
         # row = df.iloc[1]
         # get songid and artistid from song and artist tables
-        cur.execute(song_select, (row.song, row.artist, row.length))
+
+        insert_statement = song_select.format(*(row.song.replace("'", ""),
+                                                row.artist.replace("'", ""), row.length))
+        cur.execute(insert_statement)
         results = cur.fetchone()
 
         if results:
@@ -85,6 +115,22 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+
+    Parameters
+    ----------
+    cur : TYPE
+    conn : TYPE
+    filepath : TYPE
+        DESCRIPTION.
+    func : TYPE
+
+    Returns
+    -------
+    - call the process_song_file func
+    - call the process_log_file func
+
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):

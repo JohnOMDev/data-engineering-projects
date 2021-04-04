@@ -69,7 +69,7 @@ def process_log_file(cur, filepath):
 
     # insert songplay records
     for index, row in df.iterrows():
-
+        # row = df.iloc[1]
         # get songid and artistid from song and artist tables
         cur.execute(song_select, (row.song, row.artist, row.length))
         results = cur.fetchone()
@@ -78,10 +78,9 @@ def process_log_file(cur, filepath):
             songid, artistid = results
         else:
             songid, artistid = None, None
-        song_cols = ["songplay_id", "start_time", "user_id", "level", "song_id",
-                     "artist_id", "session_id", "location", "user_agent"]
         # insert songplay record
-        songplay_data = 
+        songplay_data = (row.ts, row.start_time, int(row.userId), row.level, songid, artistid,
+                         row.sessionId, row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
 
@@ -105,7 +104,7 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
+    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=john_dev password=Futarian16")
     cur = conn.cursor()
 
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)

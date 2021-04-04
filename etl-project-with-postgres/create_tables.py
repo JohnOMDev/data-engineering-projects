@@ -59,9 +59,8 @@ def create_tables(cur, conn):
     Parameters
     ----------
     cur : TYPE
-        DESCRIPTION.
     conn : TYPE
-        DESCRIPTION.
+
 
     Returns
     -------

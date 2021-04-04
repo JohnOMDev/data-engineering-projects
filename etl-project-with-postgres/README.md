@@ -19,7 +19,8 @@ For example, here are filepaths to two files in this dataset.
 ### 6   Query and test
 
 ![alt text](https://github.com/JohnOMDev/data-engineering-projects/etl-project-with-postgres/blob/main/song_table.png?raw=true)
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/tree/main/etl-project-with-postgres/song_table.png?raw=true)
 
 
 
-![alt text](https://github.com/JohnOMDev/data-engineering-projects/etl-project-with-postgres/blob/main/fact_table.png?raw=true)
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/tree/main/etl-project-with-postgres/fact_table.png?raw=true)

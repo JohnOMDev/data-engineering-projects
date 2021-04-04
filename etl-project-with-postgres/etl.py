@@ -2,36 +2,43 @@ import os
 import glob
 import psycopg2
 import datatime
+
 import pandas as pd
 
 # from sql_queries import *  # Bad code using wildcard
 from sql_queries import songplay_table_insert, user_table_insert, song_table_insert, \
                             artist_table_insert, time_table_insert, song_select
 
+
 def process_song_file(cur, filepath):
     # open song file
-    df = read_json(filepath, lines=True)
+    df = pd.read_json(filepath, lines=True)
 
     # insert song record
     song_cols = ["song_id", "title", "artist_id", "year", "duration"]
     song_data = df[song_cols]
     cur.execute(song_table_insert, song_data)
-    
+
     # insert artist record
-    artist_col = ["artist_id", "name", "location", "latitude", "longitude"]
-    artist_data = df[artist_col]
+    artist_col = ["artist_id", "artist_name", "artist_location",
+                  "artist_latitude", "artist_longitude"]
+    artist_data = df[artist_col].rename(columns={"artist_name": "name",
+                                                 "artist_location": "location",
+                                                 "artist_latitude": "latitude",
+                                                 "artist_longitude": "longitude"
+                                                 })
     cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
     # open log file
-    df = read_json(filepath, lines=True)
+    df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
-    df = 
+    df = df[df["page"] == "NextSong"]
 
     # convert timestamp column to datetime
-    t = datatime.datatime()
+    t = datatime.datatime(df["ts"])
     
     # insert time data records
     time_data = 
@@ -69,8 +76,8 @@ def process_data(cur, conn, filepath, func):
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
-        files = glob.glob(os.path.join(root,'*.json'))
-        for f in files :
+        files = glob.glob(os.path.join(root, '*.json'))
+        for f in files:
             all_files.append(os.path.abspath(f))
 
     # get total number of files found

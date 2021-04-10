@@ -38,7 +38,7 @@ The data folder contain json file for log data and song data in the following st
 *   Fpr more user interraction, you can also run the `test.ipynb` and `etl.ipynb` jupyter notebook using anaconda
 
 
-![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/etl-project-with-postgres/song_table.png?raw=true)
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/etl-project-with-postgres/images/song_table.png?raw=true)
 
 
-![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/etl-project-with-postgres/fact_table.png?raw=true)
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/etl-project-with-postgres/images/fact_table.png?raw=true)

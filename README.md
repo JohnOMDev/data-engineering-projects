@@ -1,8 +1,8 @@
 # Data Engineering Projects
 ### Data modelling
 ######  Relational Database
-*   Postgres
-*   MSQL
+    Postgres
+    MSQL
 ######  NoSQL
     Apache Cassandra
 ### ETL Process

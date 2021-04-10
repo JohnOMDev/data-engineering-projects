@@ -51,13 +51,11 @@ for f in file_path_list:
     except:
         LOG.exception("Problem extracting the file")
 
-
-# =============================================================================
-#  creating a smaller event data csv file called event_datafile_full csv \
-#    that will be used to insert data into the \
-#  Apache Cassandra tables
-# =============================================================================
-
+"""
+ creating a smaller event data csv file called event_datafile_full csv \
+   that will be used to insert data into the \
+ Apache Cassandra tables
+"""
 
 csv.register_dialect('myDialect', quoting=csv.QUOTE_ALL, skipinitialspace=True)
 try:

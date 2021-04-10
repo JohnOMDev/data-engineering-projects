@@ -6,7 +6,7 @@ Each file is in JSON format and contains metadata about a song and the artist of
 The files are partitioned by the first three letters of each song's track ID. 
 For example, here are filepaths to two files in this dataset.
 ## Set up Environment
-*   Install or Update your python - `pip install python -m pip install mysql-connector-python`
+*   Install or Update your python - `pip install mysql-connector-python`
 *   Install ipython SQL simulator - pip install ipython-sql
 
 ##  Functionality

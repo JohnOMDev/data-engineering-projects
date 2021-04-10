@@ -1,1 +1,1 @@
-# Data Modelling with Apache Cassandra (NoSQL) Databasea and ETL Process
+# Data Modelling with Apache Cassandra (NoSQL) Database and ETL Process

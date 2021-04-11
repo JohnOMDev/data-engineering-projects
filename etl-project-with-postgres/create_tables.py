@@ -2,6 +2,10 @@ import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
 
 
+"""
+    PLEASE INSERT YOUR POSTGRESQL USERNAME, PASSWORD AND DATABASE BELOW
+"""
+
 def create_database():
     """
 
@@ -20,8 +24,8 @@ def create_database():
     cur = conn.cursor()
 
     # create sparkify database with UTF8 encoding
-    cur.execute("DROP DATABASE IF EXISTS sparkifydb")
-    cur.execute("CREATE DATABASE sparkifydb WITH ENCODING 'utf8' TEMPLATE template0")
+    cur.execute("DROP DATABASE IF EXISTS ***")
+    cur.execute("CREATE DATABASE *** WITH ENCODING 'utf8' TEMPLATE template0")
 
     # close connection to default database
     conn.close()

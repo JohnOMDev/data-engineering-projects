@@ -8,6 +8,9 @@ import pandas as pd
 from sql_queries import songplay_table_insert, user_table_insert, song_table_insert, \
                             artist_table_insert, time_table_insert, song_select
 
+"""
+    PLEASE INSERT YOUR POSTGRESQL USERNAME, PASSWORD AND DATABASE BELOW
+"""
 
 def process_song_file(cur, filepath):
     """

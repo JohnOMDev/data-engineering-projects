@@ -1,20 +1,23 @@
 import os
 import glob
-import psycopg2
 from datetime import datetime
 import pandas as pd
+import mysql.connector as mysql
+from mysql.connector import errorcode
+from sqlalchemy import create_engine
 
-# from sql_queries import *  # Bad code using wildcard
 from sql_queries import songplay_table_insert, user_table_insert, song_table_insert, \
                             artist_table_insert, time_table_insert, song_select
 
-
-def process_song_file(cur, filepath):
+"""
+    PLEASE INSERT YOUR MYSQL USERNAME, PASSWORD AND DATABASE BELOW
+"""
+def process_song_file(cursor, filepath):
     """
 
     Parameters
     ----------
-    cur : TYPE
+    cursor : TYPE
         DESCRIPTION.
     filepath : TYPE
 
@@ -27,23 +30,25 @@ def process_song_file(cur, filepath):
     """
     # open song file
     df = pd.read_json(filepath, lines=True)
-
+    df = df.where((pd.notnull(df)), None)
     # insert song record
     # song_cols = ["song_id", "title", "artist_id", "year", "duration"]
     song_data = list(df[["song_id", "title", "artist_id", "year", "duration"]].values[0])
-    cur.execute(song_table_insert, song_data)
+    
+    cursor.execute(song_table_insert, song_data)
+    
+    artist_data = list(df[["artist_id", "artist_name", "artist_location", "artist_latitude", "artist_longitude"]].values[0])
 
-    artist_data = list(df[["artist_id", "artist_name", "artist_location",
-                           "artist_latitude", "artist_longitude"]].values[0])
-    cur.execute(artist_table_insert, artist_data)
+
+    cursor.execute(artist_table_insert, artist_data)
 
 
-def process_log_file(cur, filepath):
+def process_log_file(cursor, filepath):
     """
 
     Parameters
     ----------
-    cur : TYPE
+    cursor : TYPE
         DESCRIPTION.
     filepath : TYPE
 
@@ -77,7 +82,7 @@ def process_log_file(cur, filepath):
 
     for i, row in time_df.iterrows():
         print(list(row))
-        cur.execute(time_table_insert, list(row))
+        cursor.execute(time_table_insert, list(row))
 
     # load user table
     user_cols = ["userId", "firstName",
@@ -88,10 +93,15 @@ def process_log_file(cur, filepath):
         "lastName": "last_name"
         }))
     user_df["user_id"] = user_df["user_id"].astype(int)
-
+    user_df.reset_index(drop=True, inplace=True)
     # insert user records
-    for i, row in user_df.iterrows():
-        cur.execute(user_table_insert, row)
+
+    for i in user_df.index:
+        row = user_df.iloc[i]
+        Selected_list = [int(row['user_id']), row['first_name'], \
+                             row['last_name'], row['gender'], row['level'], i]
+        # print(Selected_list)
+        cursor.execute(user_table_insert, Selected_list)
 
     for index, row in df.iterrows():
         # row = df.iloc[1]
@@ -99,8 +109,8 @@ def process_log_file(cur, filepath):
 
         insert_statement = song_select.format(*(row.song.replace("'", ""),
                                                 row.artist.replace("'", ""), row.length))
-        cur.execute(insert_statement)
-        results = cur.fetchone()
+        cursor.execute(insert_statement)
+        results = cursor.fetchone()
 
         if results:
             songid, artistid = results
@@ -109,16 +119,16 @@ def process_log_file(cur, filepath):
         # insert songplay record
         songplay_data = (row.ts, row.start_time, int(row.userId), row.level, songid, artistid,
                          row.sessionId, row.location, row.userAgent)
-        cur.execute(songplay_table_insert, songplay_data)
+        cursor.execute(songplay_table_insert, songplay_data)
 
 
-def process_data(cur, conn, filepath, func):
+def process_data(cursor, db, filepath, func):
     """
 
     Parameters
     ----------
-    cur : TYPE
-    conn : TYPE
+    cursor : TYPE
+    db : TYPE
     filepath : TYPE
         DESCRIPTION.
     func : TYPE
@@ -142,19 +152,31 @@ def process_data(cur, conn, filepath, func):
 
     # iterate over files and process
     for i, datafile in enumerate(all_files, 1):
-        func(cur, datafile)
-        conn.commit()
+        func(cursor, datafile)
+        db.commit()
         print('{}/{} files processed.'.format(i, num_files))
 
 
 def main():
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
-    cur = conn.cursor()
+    try:
+        db = mysql.connect(user='root', password='***',
+                       host="127.0.0.1", database="***")
+        cursor = db.cursor()
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("There is error with the username or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+# =============================================================================
+#             engine = create_engine('mysql+mysqldb://[user]:[pass]@[host]:[port]/[schema]', echo = False)
+#             df.to_sql(name = 'my_table', con = engine, if_exists = 'append', index = False)
+# =============================================================================
+    process_data(cursor, db, filepath='data/song_data', func=process_song_file)
+    process_data(cursor, db, filepath='data/log_data', func=process_log_file)
 
-    process_data(cur, conn, filepath='data/song_data', func=process_song_file)
-    process_data(cur, conn, filepath='data/log_data', func=process_log_file)
-
-    conn.close()
+    db.close()
 
 
 if __name__ == "__main__":

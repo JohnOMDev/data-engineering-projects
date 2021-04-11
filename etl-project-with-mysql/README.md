@@ -15,9 +15,8 @@ For example, here are filepaths to two files in this dataset.
 *	`exit;`
 *	`sudo service mysql restart`
 *	`mysql -u root -p`
-*	https://linuxize.com/post/how-to-create-mysql-user-accounts-and-grant-privileges/
+*	You can follow the link for easy installation https://linuxize.com/post/how-to-create-mysql-user-accounts-and-grant-privileges/
 *   Install ipython SQL simulator - pip install ipython-sql
-*	`pip install pymysql`
 
 ##  Functionality
 ### 1   Create Database: 
@@ -46,8 +45,3 @@ The data folder contain json file for log data and song data in the following st
 *   Finally, run `etl.py` using `python etl.py`.
 *   For more user interraction, you can also run the `test.ipynb` and `etl.ipynb` jupyter notebook using anaconda
 
-
-![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/etl-project-with-postgres/images/song_table.png?raw=true)
-
-
-![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/etl-project-with-postgres/images/fact_table.png?raw=true)

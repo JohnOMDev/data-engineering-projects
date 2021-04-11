@@ -1,4 +1,5 @@
-import psycopg2
+import mysql.connector as mysql
+from mysql.connector import errorcode
 from sql_queries import create_table_queries, drop_table_queries
 
 
@@ -15,25 +16,47 @@ def create_database():
     """
 
     # connect to default database
-    conn = psycopg2.connect("host=127.0.0.1 dbname=studentdb user=student password=student")
-    conn.set_session(autocommit=True)
-    cur = conn.cursor()
+    try:
+        db = mysql.connect(user='root', password='***',
+                           host="127.0.0.1")
+        cursor = db.cursor()
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("There is error with the username or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+    
 
     # create sparkify database with UTF8 encoding
-    cur.execute("DROP DATABASE IF EXISTS sparkifydb")
-    cur.execute("CREATE DATABASE sparkifydb WITH ENCODING 'utf8' TEMPLATE template0")
+    cursor.execute("DROP DATABASE IF EXISTS ***")
+
+    cursor.execute("CREATE DATABASE IF NOT EXISTS *** \
+                   DEFAULT CHARACTER SET utf8 \
+                       DEFAULT COLLATE utf8_general_ci")
 
     # close connection to default database
-    conn.close()
+    db.close()
+
 
     # connect to sparkify database
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
-    cur = conn.cursor()
+    try:
+        db = mysql.connect(user='root', password='***',
+                           host="127.0.0.1", database="***")
+        cursor = db.cursor()
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("There is error with the username or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
 
-    return cur, conn
+    return cursor, db
 
 
-def drop_tables(cur, conn):
+def drop_tables(cursor, db):
     """
 
     Parameters
@@ -49,11 +72,11 @@ def drop_tables(cur, conn):
     """
     for query in drop_table_queries:
         # query = drop_table_queries[0]
-        cur.execute(query)
-        conn.commit()
+        cursor.execute(query)
+        db.commit()
 
 
-def create_tables(cur, conn):
+def create_tables(cursor, db):
     """
 
     Parameters
@@ -68,8 +91,8 @@ def create_tables(cur, conn):
     """
     for query in create_table_queries:
         # query = create_table_queries[0]
-        cur.execute(query)
-        conn.commit()
+        cursor.execute(query)
+        db.commit()
 
 
 def main():
@@ -77,9 +100,9 @@ def main():
 
     Returns
     -------
-    - Drops (if exists) and Creates the sparkify database.
+    - Drops (if exists) and Creates the database.
 
-    - Establishes connection with the sparkify database and gets
+    - Establishes connection with the database and gets
     cursor to it.
 
     - Drops all the tables.
@@ -88,12 +111,12 @@ def main():
 
     - Finally, closes the connection.
     """
-    cur, conn = create_database()
+    cursor, db = create_database()
 
-    drop_tables(cur, conn)
-    create_tables(cur, conn)
+    drop_tables(cursor, db)
+    create_tables(cursor, db)
 
-    conn.close()
+    db.close()
 
 
 if __name__ == "__main__":

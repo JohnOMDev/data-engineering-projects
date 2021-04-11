@@ -4,8 +4,10 @@ from datetime import datetime
 import pandas as pd
 import mysql.connector as mysql
 from mysql.connector import errorcode
-from sqlalchemy import create_engine
-
+import logging
+logging.basicConfig(format="%(asctime)s %(name)s %(levelname)-10s %(message)s")
+LOG = logging.getLogger("etl.py")
+LOG.setLevel(os.environ.get("LOG_LEVEL", logging.DEBUG))
 from sql_queries import songplay_table_insert, user_table_insert, song_table_insert, \
                             artist_table_insert, time_table_insert, song_select
 
@@ -32,15 +34,23 @@ def process_song_file(cursor, filepath):
     df = pd.read_json(filepath, lines=True)
     df = df.where((pd.notnull(df)), None)
     # insert song record
-    # song_cols = ["song_id", "title", "artist_id", "year", "duration"]
-    song_data = list(df[["song_id", "title", "artist_id", "year", "duration"]].values[0])
-    
-    cursor.execute(song_table_insert, song_data)
-    
-    artist_data = list(df[["artist_id", "artist_name", "artist_location", "artist_latitude", "artist_longitude"]].values[0])
+    song_data_df = df[["song_id", "title", "artist_id", "year", "duration"]]
+    for i in song_data_df.index:
+        row = song_data_df.iloc[i]
+        Selected_list = [i, int(row['song_id']), row['title'], \
+                             int(row['artist_id']), int(row['year']), float(row['duration'])]
+        #  LOG.info(Selected_list)
+        cursor.execute(song_table_insert, Selected_list)
 
-
-    cursor.execute(artist_table_insert, artist_data)
+    artist_data_df = df[["artist_id", "artist_name", "artist_location",
+                         "artist_latitude", "artist_longitude"]]
+    for i in artist_data_df.index:
+        row = artist_data_df.iloc[i]
+        Selected_list = [i, int(row['artist_id']), row['artist_name'], \
+                             row['artist_location'], float(row['artist_latitude']),
+                             float(row['artist_longitude'])]
+        #  LOG.info(Selected_list)
+        cursor.execute(artist_table_insert, Selected_list)
 
 
 def process_log_file(cursor, filepath):
@@ -81,7 +91,7 @@ def process_log_file(cursor, filepath):
     time_df = df[column_labels]
 
     for i, row in time_df.iterrows():
-        print(list(row))
+        LOG.info(list(row))
         cursor.execute(time_table_insert, list(row))
 
     # load user table
@@ -98,9 +108,9 @@ def process_log_file(cursor, filepath):
 
     for i in user_df.index:
         row = user_df.iloc[i]
-        Selected_list = [int(row['user_id']), row['first_name'], \
-                             row['last_name'], row['gender'], row['level'], i]
-        # print(Selected_list)
+        Selected_list = [i, int(row['user_id']), row['first_name'], \
+                             row['last_name'], row['gender'], row['level']]
+        #  LOG.info(Selected_list)
         cursor.execute(user_table_insert, Selected_list)
 
     for index, row in df.iterrows():
@@ -117,7 +127,7 @@ def process_log_file(cursor, filepath):
         else:
             songid, artistid = None, None
         # insert songplay record
-        songplay_data = (row.ts, row.start_time, int(row.userId), row.level, songid, artistid,
+        songplay_data = (index, row.ts, row.start_time, int(row.userId), row.level, songid, artistid,
                          row.sessionId, row.location, row.userAgent)
         cursor.execute(songplay_table_insert, songplay_data)
 
@@ -164,15 +174,11 @@ def main():
         cursor = db.cursor()
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("There is error with the username or password")
+             LOG.info("There is error with the username or password")
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
+             LOG.info("Database does not exist")
         else:
-            print(err)
-# =============================================================================
-#             engine = create_engine('mysql+mysqldb://[user]:[pass]@[host]:[port]/[schema]', echo = False)
-#             df.to_sql(name = 'my_table', con = engine, if_exists = 'append', index = False)
-# =============================================================================
+             LOG.info(err)
     process_data(cursor, db, filepath='data/song_data', func=process_song_file)
     process_data(cursor, db, filepath='data/log_data', func=process_log_file)
 

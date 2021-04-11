@@ -8,13 +8,13 @@ time_table_drop = "DROP TABLE IF EXISTS songplays"
 
 # CREATE TABLES
 
-songplay_table_create = (""" CREATE TABLE IF NOT EXISTS songplays(songplay_id bigint, \
+songplay_table_create = (""" CREATE TABLE IF NOT EXISTS songplays(auto_increment INT, songplay_id bigint, \
                              start_time timestamp NOT NULL, \
                              user_id int REFERENCES users (user_id), \
                                  level varchar(45), song_id varchar(45), \
                                 artist_id varchar(45), session_id int, \
                                     location varchar(50) NOT NULL, \
-                                        user_agent varchar(500), PRIMARY KEY (songplay_id, session_id))
+                                        user_agent varchar(500), PRIMARY KEY (auto_increment, songplay_id, session_id))
 
 """)
 
@@ -23,14 +23,14 @@ user_table_create = (""" CREATE TABLE IF NOT EXISTS users (auto_increment INT, u
                          level VARCHAR(45), PRIMARY KEY(auto_increment, user_id, last_name))
 """)
 
-song_table_create = (""" CREATE TABLE IF NOT EXISTS songs (song_id varchar(50), title varchar(100), \
+song_table_create = (""" CREATE TABLE IF NOT EXISTS songs (auto_increment INT, song_id varchar(50), title varchar(100), \
                          artist_id varchar(100), year int NOT NULL, duration decimal(20,10) NOT NULL, \
-                             PRIMARY KEY(song_id))
+                             PRIMARY KEY(auto_increment, song_id))
 """)
 
-artist_table_create = (""" CREATE TABLE IF NOT EXISTS artists (artist_id varchar(45), name varchar(500), \
+artist_table_create = (""" CREATE TABLE IF NOT EXISTS artists (auto_increment INT, artist_id varchar(45), name varchar(500), \
                            location varchar(100), latitude decimal(10,2), longitude decimal(20,10), \
-                               PRIMARY KEY(artist_id, name, location))
+                               PRIMARY KEY(auto_increment, artist_id, name, location))
 """)
 
 time_table_create = (""" CREATE TABLE IF NOT EXISTS time (start_time timestamp NOT NULL, \
@@ -40,22 +40,22 @@ time_table_create = (""" CREATE TABLE IF NOT EXISTS time (start_time timestamp N
 
 # INSERT RECORDS
 
-songplay_table_insert = (""" INSERT INTO songplays(songplay_id, \
+songplay_table_insert = (""" INSERT INTO songplays(auto_increment, songplay_id, \
                              start_time, user_id, level, song_id, \
                              artist_id, session_id, location, \
-                            user_agent) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            user_agent) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """)
 
-user_table_insert = (""" INSERT INTO users (user_id, first_name, \
-                         last_name, gender, level, auto_increment) VALUES(%s, %s, %s, %s, %s, %s)
+user_table_insert = (""" INSERT INTO users (auto_increment, user_id, first_name, \
+                         last_name, gender, level) VALUES(%s, %s, %s, %s, %s, %s)
 """)
 
-song_table_insert = (""" INSERT INTO songs (song_id, title, \
-                         artist_id, year, duration) VALUES(%s, %s, %s, %s, %s)
+song_table_insert = (""" INSERT INTO songs (auto_increment, song_id, title, \
+                         artist_id, year, duration) VALUES(%s, %s, %s, %s, %s, %s)
 """)
 
-artist_table_insert = (""" INSERT INTO artists (artist_id, name, \
-                           location, latitude, longitude) VALUES(%s, %s, %s, %s, %s)
+artist_table_insert = (""" INSERT INTO artists (auto_increment, artist_id, name, \
+                           location, latitude, longitude) VALUES(%s, %s, %s, %s, %s, %s)
 """)
 
 

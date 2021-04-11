@@ -3,6 +3,11 @@ from mysql.connector import errorcode
 from sql_queries import create_table_queries, drop_table_queries
 
 
+"""
+    PLEASE INSERT YOUR MYSQL USERNAME, PASSWORD AND DATABASE BELOW
+"""
+
+
 def create_database():
     """
 

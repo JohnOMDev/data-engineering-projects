@@ -7,7 +7,17 @@ The files are partitioned by the first three letters of each song's track ID.
 For example, here are filepaths to two files in this dataset.
 ## Set up Environment
 *   Install or Update your python - `pip install mysql-connector-python`
+*	Install MySQL Server `sudo apt-get install mysql-server`
+*	`mysql -u root`
+*	`USE mysql;`
+*	`set password for 'root'@'localhost' = password('YOUR_ROOT_PASSWORD_HERE');`
+*	`FLUSH PRIVILEGES;`
+*	`exit;`
+*	`sudo service mysql restart`
+*	`mysql -u root -p`
+*	https://linuxize.com/post/how-to-create-mysql-user-accounts-and-grant-privileges/
 *   Install ipython SQL simulator - pip install ipython-sql
+*	`pip install pymysql`
 
 ##  Functionality
 ### 1   Create Database: 

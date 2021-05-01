@@ -58,4 +58,4 @@ songplays (fact table) - records in event data associated with song plays i.e. r
 *	Go to Terminal write the command `python create_tables.py` and then `etl.py`
 *	Should take around 10 minutes in total
 *	You can checxk it in jupyter noteboook `test.ipynb` everything is working fine
-*	Now can delete the cluster, roles and assigned permission by running `delete_AWS_resources_iaac.py`
+*	Now can delete the cluster, roles and assigned permission by running `delete_AWS_resources_iaac.py` :shipit:

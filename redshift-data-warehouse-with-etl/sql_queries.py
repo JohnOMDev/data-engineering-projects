@@ -34,7 +34,7 @@ staging_events_table_create= ("""
     location VARCHAR(500),
     method VARCHAR(45),
     page VARCHAR(45),
-    registration VARCHAR(200),
+    registration BIGINT,
     sessionId INTEGER,
     song VARCHAR(500),
     status INTEGER,
@@ -155,6 +155,10 @@ songplay_table_insert = ("""
           se.userAgent      AS user_agent
    FROM staging_events as se
    JOIN staging_songs as ss ON se.artist = ss.artist_name
+   AND
+   se.song = ss.title
+   AND
+   se.duration = ss.length
    WHERE se.page = 'NextSong'
 """)
 
@@ -179,7 +183,6 @@ song_table_insert = ("""
   year                 AS year,
   duration             AS duration
   FROM staging_songs
-WHERE song_id NOT IN (SELECT DISTINCT song_id FROM songs)
 """)
 
 artist_table_insert = ("""
@@ -191,7 +194,6 @@ artist_table_insert = ("""
          artist_latitude    AS latitude,
          artist_longitude   AS longitude
   FROM staging_songs
-WHERE artist_id NOT IN (SELECT DISTINCT artist_id FROM artists)
 """)
 
 time_table_insert = ("""

@@ -4,6 +4,19 @@ from sql_queries import create_table_queries, drop_table_queries
 
 
 def drop_tables(cur, conn):
+    """
+
+    Parameters
+    ----------
+    cur : Connnection
+    conn : Connnection
+
+-    Drops each table using the queries in `drop_table_queries` list.
+    Returns
+    -------
+    None.
+
+    """
     for query in drop_table_queries:
         # query = drop_table_queries[0]
         cur.execute(query)
@@ -11,6 +24,19 @@ def drop_tables(cur, conn):
 
 
 def create_tables(cur, conn):
+    """
+
+    Parameters
+    ----------
+    cur : Connnection
+    conn : Connnection
+
+-   Creates each table using the queries in `create_table_queries` list.
+    Returns
+    -------
+    None.
+
+    """
     for query in create_table_queries:
         # query = create_table_queries[0]
         cur.execute(query)
@@ -18,6 +44,18 @@ def create_tables(cur, conn):
 
 
 def main():
+    """
+
+    Returns
+    -------
+    - Establishes connection with the sparkify database and gets
+    cursor to it.
+    - Drops all the tables.
+
+    - Creates all tables needed.
+
+    - Finally, closes the connection.
+    """
     config = configparser.ConfigParser()
     config.read('dwh.cfg')
 

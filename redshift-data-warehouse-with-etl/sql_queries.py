@@ -23,7 +23,7 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 staging_events_table_create= ("""
    CREATE TABLE IF NOT EXISTS staging_events
    (
-    staging_event_key BIGINT IDENTITY(0,1) distkey sortkey,
+    staging_event_key BIGINT IDENTITY(0,1),
     artist VARCHAR(500),
     auth VARCHAR(45),
     firstName VARCHAR(45),
@@ -47,14 +47,14 @@ staging_events_table_create= ("""
 staging_songs_table_create = (""" 
    CREATE TABLE IF NOT EXISTS staging_songs
    (
-     staging_song_key BIGINT IDENTITY(0,1) sortkey,
+     staging_song_key BIGINT IDENTITY(0,1),
      num_songs INTEGER,
      artist_id VARCHAR(100),
      artist_latitude DECIMAL(10,5),
      artist_longitude DECIMAL(10,5),
      artist_location VARCHAR(500),
      artist_name VARCHAR(500),
-     song_id VARCHAR(100) distkey,
+     song_id VARCHAR(100),
      title VARCHAR(500),
      duration DECIMAL(10,5),
      year INTEGER
@@ -162,7 +162,8 @@ songplay_table_insert = ("""
 
 user_table_insert = ("""
   INSERT INTO users (user_id, first_name, last_name, gender, level)
-  SELECT userId            AS user_id,
+  SELECT DISTINCT
+         userId            AS user_id,
          firstName         AS first_name,
          lastName          AS last_name,
          gender            AS gender,
@@ -173,7 +174,8 @@ user_table_insert = ("""
 
 song_table_insert = ("""
   INSERT INTO songs (song_id, title, artist_id, year, duration)
-  SELECT song_id       AS song_id,
+  SELECT DISTINCT
+  song_id       AS song_id,
   title                AS title,
   artist_id            AS artist_id,
   year                 AS year,
@@ -183,7 +185,8 @@ song_table_insert = ("""
 
 artist_table_insert = ("""
   INSERT INTO artists (artist_id, name, location, latitude, longitude)
-  SELECT artist_id          AS artist_id,
+  SELECT DISTINCT
+         artist_id          AS artist_id,
          artist_name        AS name,
          artist_location    AS location,
          artist_latitude    AS latitude,
@@ -193,7 +196,7 @@ artist_table_insert = ("""
 
 time_table_insert = ("""
   INSERT INTO time (start_time, hour, day, week, month, year, is_weekend)
-  SELECT
+  SELECT DISTINCT
          TO_TIMESTAMP(ts,'yyy-MM-DD') AS start_time,
          EXTRACT(hour FROM start_time)                AS hour,
          EXTRACT(DAY FROM start_time)                 AS day,

@@ -167,7 +167,7 @@ user_table_insert = ("""
          gender            AS gender,
          level             AS level
  FROM staging_events
-
+WHERE user_id NOT IN (SELECT DISTINCT user_id FROM users)
 """)
 
 song_table_insert = ("""

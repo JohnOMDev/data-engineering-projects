@@ -183,6 +183,7 @@ song_table_insert = ("""
   year                 AS year,
   duration             AS duration
   FROM staging_songs
+WHERE song_id NOT IN (SELECT DISTINCT song_id FROM songs)
 """)
 
 artist_table_insert = ("""
@@ -194,6 +195,7 @@ artist_table_insert = ("""
          artist_latitude    AS latitude,
          artist_longitude   AS longitude
   FROM staging_songs
+WHERE artist_id NOT IN (SELECT DISTINCT artist_id FROM artists)
 """)
 
 time_table_insert = ("""

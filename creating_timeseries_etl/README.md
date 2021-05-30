@@ -28,7 +28,7 @@ The CRM data has the following schema: the customer account UUID (acct_id), the 
 *   `data`:  The data folder.
 
 ### The data set structure.
-The data folder contain json file for log data and song data in the following structure.
+The data folder contain json file for sales data and csv for crm data in the following structure.
 *   `crm.csv`
 *   `sales-2019-02-01.json`
 
@@ -38,3 +38,5 @@ The data folder contain json file for log data and song data in the following st
 *   Run `etl.py` using `python etl.py`.
 *	Open the `test.ipynb` for testing the table creation and insertion.
 *   Finally, open `Analytics.ipynb` jupyter notebook using anaconda.
+
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/creating_timeseries_etl/images/bayerF.jpg?raw=true)

@@ -39,4 +39,4 @@ The data folder contain json file for sales data and csv for crm data in the fol
 *	Open the `test.ipynb` for testing the table creation and insertion.
 *   Finally, open `Analytics.ipynb` jupyter notebook using anaconda.
 
-![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/creating_timeseries_etl/images/bayerF.jpg?raw=true)
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/creating_timeseries_etl/images/bayer.jpg?raw=true)

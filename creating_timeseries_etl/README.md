@@ -11,15 +11,15 @@ The CRM data has the following schema: the customer account UUID (acct_id), the 
 *   Install ipython SQL simulator - pip install ipython-sql.
 
 ##  Functionality
-### 1   Create Database: 
+### 1   Create Database
 ### 2   Drop table if exits
 ### 3   Create table if not exists
 ### 4   Insert into table
 ### 5   Build ETL Processes
-### 6   Query and test
+### 6   Perform Analytic Query to clean the data and answer the business questions
 
 
-### What is the use of each file in your submission
+### What is the use of each file
 *   `create_tables.py`: The python script contain functions to automate the process of creating and dropping the database and table.
 *   `sql_queries.py`: The file contains sql query that perform dropping, creation, and insertion of data into the table. 
 *   `etl.py`: The python script contain the process of extracting the data, process and insert it into the tables.
@@ -37,6 +37,6 @@ The data folder contain json file for sales data and csv for crm data in the fol
 *   Run `create_tables.py` in the console using `python create_tables.py`.
 *   Run `etl.py` using `python etl.py`.
 *	Open the `test.ipynb` for testing the table creation and insertion.
-*   Finally, open `Analytics.ipynb` jupyter notebook using anaconda.
+*   Finally, open `Analytics.ipynb` jupyter notebook using anaconda to check solution for the business questions.
 
 ![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/creating_timeseries_etl/images/bayer.jpg?raw=true)

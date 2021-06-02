@@ -5,9 +5,13 @@ Created on Tue Jun  1 23:36:27 2021
 
 @author: john
 """
-import psycopg2
+import psycopg2 as pg
+import configparser
 from sql_queries import create_table_queries, drop_table_queries
 
+"""
+    PLEASE INSERT YOUR REDSHIFT USERNAME, PASSWORD, ENDPOINT AND DATABASE BELOW
+"""
 
 def drop_tables(cur, conn):
     """
@@ -63,14 +67,29 @@ def main():
     - Finally, closes the connection.
     """
 
-    conn = psycopg2.connect("host={} dbname={} user={} password={} port={}")
-    cur = conn.cursor()
+    config = configparser.ConfigParser()
+    config.read('dwh.cfg')
+# =============================================================================
+#     conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(*config['DB'].values()))
+#     cur = conn.cursor()
+# =============================================================================
+
+    # attempt the connection to postgres
+    try:
+        conn = pg.connect(
+            database=config.get("DB", "db_name"),
+            user=config.get("DB", "db_user"),
+            password=config.get("DB", "db_password"),
+            host=config.get("DB", "host")
+        )
+        cur = conn.cursor()
+    except Exception as error:
+        print(error)
 
     drop_tables(cur, conn)
     create_tables(cur, conn)
 
     conn.close()
-
 
 if __name__ == "__main__":
     main()

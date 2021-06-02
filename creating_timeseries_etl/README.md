@@ -1,9 +1,19 @@
 #	Introduction          
-Bayer wants to increase the market share in Germany for its most important anti-allergy product, Snaffleflax®. A critical step in achieving this goal is understanding, measuring and predicting this market share against the three primary competitor products in the market which are Globberin, Beeblizox and Vorbulon.
+Marketing team needs to know the current total available volume in the platform by project and recent development over the recent period for Exporo Financing (https://exporo.de/finanzierung/).
 ### Data description
-Eighteen months historical data was provided between 2019-01 and 2020-06. The data consists of historical market share and historical sales and marketing activity, i.e. receiving email newsletters or face-to-face visits with sales reps. The historical sales and marketing activity is stored in a Customer Relationship Management (CRM) database.
-The historical market share are made up of the customer account UUID (acct_id), the product name as recorded by the distributor (product_name), the date of the sale (rounded to the month), the units sold for that account in the month and the creation timestamp of the record in the database.     
-The CRM data has the following schema: the customer account UUID (acct_id), the event type (f2f, workplace event, or group call), and the date of the event. 
+In order to get the information, our product team has provided us with the following endpoint: https://read.financing.exporo.io/v1/projects/meta/active
+
+This endpoint shows the current/active projects (also called financing entities) in the financing section as of now. 
+
+###	Assumptions:
+You can assume that DWH contains already the below tables
+*	Funding Target
+*	Intermediated Capital
+
+### Business Requirements:
+The idea is to have 2 basic reports that should provide:
+*	Current available projects and volume in the platform
+*	Development of each project over time: total volume available in the last 90 days
 
 ## Set up Environment
 *   Install or Update your python - pip install postgres.

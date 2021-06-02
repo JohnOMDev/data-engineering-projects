@@ -10,11 +10,12 @@ import logging
 from datetime import timedelta, datetime
 from airflow import DAG
 
-from airflow.operators.bash import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
 from airflow.utils.dates import days_ago
 sys.path.append('../../')
+from etl import main as etl_main
+from create_tables import main as create_main
 from api_connection import get_exporo_data_to_df
 
 logging.basicConfig(format="%(asctime)s %(name)s %(levelname)-10s %(message)s")
@@ -40,11 +41,22 @@ dag = DAG(
     schedule_interval=timedelta(days=1),
     )
 
+run_table_create = PythonOperator(
+    task_id='exporo_table_create_' + datetime.now().strftime("%Y_%m_%d"),
+    python_callable=create_main,
+    dag=dag
+    )
 
-run_etl = PythonOperator(
-    task_id='exporo_api_' + datetime.now().strftime("%Y_%m_%d"),
+run_api_connection = PythonOperator(
+    task_id='exporo_api_connection_' + datetime.now().strftime("%Y_%m_%d"),
     python_callable=get_exporo_data_to_df,
     dag=dag
     )
 
-run_etl
+run_etl = PythonOperator(
+    task_id='exporo_etl' + datetime.now().strftime("%Y_%m_%d"),
+    python_callable=etl_main,
+    dag=dag
+    )
+
+run_table_create >> run_api_connection >> run_etl

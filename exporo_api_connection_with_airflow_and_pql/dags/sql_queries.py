@@ -14,8 +14,9 @@ intermediated_capital_table_drop = "DROP TABLE IF EXISTS intermediated_capitalS"
 investment_table_create = ("""
   CREATE TABLE IF NOT EXISTS investments
   (
-    "Financing Entity ID" INTEGER NOT NULL,
-    Date DATE,
+   "Investment Id" SERIAL,
+    "Financing Entity ID" INTEGER,
+    "Date" DATE,
     "Contract ID" INTEGER,
     Name VARCHAR(250),
     Image VARCHAR(1000),
@@ -24,29 +25,43 @@ investment_table_create = ("""
     "Minimum Investment" DECIMAL(10,2),
     "Duration Investor Min" DATE,
     "Duration Investor Max" DATE,
-    "Maximum Investment" DECIMAL(10,2)
+    "Maximum Investment" DECIMAL(10,2),
+    PRIMARY KEY("Investment Id")
     )
 """)
 
 available_volume_table_create = ("""
     CREATE TABLE IF NOT EXISTS available_volumes
       (
-        "Financing Entity ID" INTEGER NOT NULL,
+        "Financing Entity ID" INTEGER,
         "Available Volume" DECIMAL(20,2),
         "Date" DATE
         )
 """)
 
-available_volume_table_insert = ("""
-    INSERT INTO available_volumes("Financing Entity ID", "Available Volume", "Date")
-    SELECT ft."Financing Entity ID",
-              (ft."Funding Target" - 
-              ic."Intermediated Capital") as "Available Volume",
-              ic."Date"
-       FROM  funding_target as ft
-       INNER JOIN  intermediated_capital as ic ON ft."Financing Entity ID" = ic."Financing Entity ID"
+investment_table_insert = (""" INSERT INTO investments("Financing Entity ID",
+                                                    "Date",
+                                                    "Contract ID",
+                                                    Name,
+                                                    Image,
+                                                    "Investment Rate",
+                                                    "Investment Type",
+                                                    "Minimum Investment",
+                                                    "Duration Investor Min",
+                                                    "Duration Investor Max",
+                                                    "Maximum Investment") VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """)
 
+available_volume_table_insert = ("""
+    INSERT INTO available_volumes("Financing Entity ID", "Available Volume", "Date")
+    SELECT DISTINCT 
+                ft."Financing Entity ID",
+                (ft."Funding Target" - 
+                ic."Intermediated Capital") as "Available Volume",
+                ic."Date"
+    FROM  funding_target as ft
+    INNER JOIN  intermediated_capital as ic ON ft."Financing Entity ID" = ic."Financing Entity ID"
+""")
 
 funding_target_table_create = ("""
     CREATE TABLE funding_target

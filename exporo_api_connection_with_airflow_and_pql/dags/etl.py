@@ -6,8 +6,12 @@ Created on Tue Jun  1 23:38:45 2021
 @author: john
 """
 import configparser
-import psycopg2
+import psycopg2 as pg
 from sql_queries import insert_table_queries
+
+"""
+    PLEASE INSERT YOUR REDSHIFT USERNAME, PASSWORD, ENDPOINT AND DATABASE BELOW
+"""
 
 def insert_tables(cur, conn):
     """
@@ -38,15 +42,21 @@ def main():
     None.
 
     """
-
-    conn = psycopg2.connect("host={} dbname={} user={} password={} port={}")
-    cur = conn.cursor()
-
+    config = configparser.ConfigParser()
+    config.read('dwh.cfg')
+    # attempt the connection to postgres
+    try:
+        conn = pg.connect(
+            database=config.get("DB", "db_name"),
+            user=config.get("DB", "db_user"),
+            password=config.get("DB", "db_password"),
+            host=config.get("DB", "host")
+        )
+        cur = conn.cursor()
+    except Exception as error:
+        print(error)
     insert_tables(cur, conn)
 
     conn.close()
 
-
-if __name__ == "__main__":
-    main()
 

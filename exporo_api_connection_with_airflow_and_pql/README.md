@@ -29,7 +29,7 @@ The idea is to have 2 basic reports that should provide:
 ### 4   Insert into table
 ### 5   Build ETL Processes
 
-### Environment Start-up
+## Environment Start-up
 *	Place your dags directory into your `airflow.cfg`
 *	Open two terminals and `cd` into the dag directory
 * 	A virtual environment with all the library and packages used is provided, therefore actiavte the virtual environment by typing `source exporo-venv/bin/activate` in the two terminals.
@@ -37,7 +37,7 @@ The idea is to have 2 basic reports that should provide:
 *	In the second terminal, type `airflow scheduler`
 *	Finally, you can visit `localhost:8080` or just `localhost` on your browser
 
-### What is the use of each file
+## What is the use of each file
 *   `create_tables.py`: The python script contain functions to automate the process of creating and dropping the database and table.
 *   `sql_queries.py`: The file contains sql query that perform dropping, creation, and insertion of data into the table. 
 *   `etl.py`: The python script contain the process of extracting data from extracting and inserting data into the available volume table.

@@ -46,4 +46,4 @@ The idea is to have 2 basic reports that should provide:
 *   `exporo-dag.py`:  The airflow file for the pipeline management.
 
 
-![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/creating_timeseries_etl/images/exporo_dag.png?raw=true)
+![alt text](https://github.com/JohnOMDev/data-engineering-projects/blob/main/exporo_api_connection_with_airflow_and_pql/images/exporo_dag.png?raw=true)
